@@ -3,8 +3,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Configurando o estilo do matplotlib
-plt.style.use('seaborn')
+# Configurando o estilo
+sns.set_theme(style="whitegrid")
+plt.style.use('default')
 
 # Configurando a página
 st.set_page_config(
@@ -84,10 +85,12 @@ if not df_filtrado.empty:
         st.subheader("Evolução das Vendas por Gênero")
         fig1, ax1 = plt.subplots(figsize=(10, 6))
         
-        for genero in generos_selecionados:
+        cores = ['#1f77b4', '#ff7f0e', '#2ca02c']  # Cores personalizadas
+        for i, genero in enumerate(generos_selecionados):
             dados_genero = df_filtrado[df_filtrado['Gênero'] == genero]
             ax1.plot(dados_genero['Ano'], dados_genero['Vendas (Milhões)'], 
-                    marker='o', linewidth=2, markersize=8, label=genero)
+                    marker='o', linewidth=2, markersize=8, label=genero,
+                    color=cores[i % len(cores)])
         
         ax1.set_title('Evolução das Vendas por Gênero')
         ax1.set_xlabel('Ano')
@@ -102,7 +105,8 @@ if not df_filtrado.empty:
         fig2, ax2 = plt.subplots(figsize=(10, 6))
         
         media_por_genero = df_filtrado.groupby('Gênero')['Vendas (Milhões)'].mean()
-        bars = ax2.bar(media_por_genero.index, media_por_genero.values)
+        bars = ax2.bar(media_por_genero.index, media_por_genero.values,
+                      color=cores[:len(media_por_genero)])
         
         ax2.set_title('Média de Vendas por Gênero')
         ax2.set_xlabel('Gênero')
